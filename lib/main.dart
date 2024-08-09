@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(home: MyApp()));
+  runApp(const MaterialApp(home: Todos()));
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 160, 55, 55),
         title: const Text("AppBar"),
       ),
-      body: const UseAlertBox(),
+      body: const ListbuilderView(),
     );
   }
 }
@@ -279,7 +279,6 @@ class _UseAlertBoxState extends State<UseAlertBox> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        
         children: [
           Text(
             _inputText.isEmpty ? 'Tap icon to enter text' : "$_inputText",
@@ -297,4 +296,145 @@ class _UseAlertBoxState extends State<UseAlertBox> {
     );
   }
 }
- 
+
+class ListBody extends StatelessWidget {
+  const ListBody({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ListView(
+        children: [
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text("Person One"),
+            subtitle: Text("shashwatPal@gmail.com"),
+            trailing: Icon(Icons.arrow_forward),
+            onTap: () => print("Person One"),
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text("Person One"),
+            subtitle: Text("shashwatPal@gmail.com"),
+            trailing: Icon(Icons.arrow_forward),
+            onTap: () => print("Person One"),
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text("Person One"),
+            subtitle: Text("shashwatPal@gmail.com"),
+            trailing: Icon(Icons.arrow_forward),
+            onTap: () => print("Person One"),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ListbuilderView extends StatelessWidget {
+  const ListbuilderView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final items = ["item1", "item2", "item3", "item4"];
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(items[index]),
+          onTap: () => print(items[index]),
+        );
+      },
+    );
+  }
+}
+
+class Todos extends StatefulWidget {
+  const Todos({super.key});
+
+  @override
+  State<Todos> createState() => _TodosState();
+}
+
+class _TodosState extends State<Todos> {
+  // initial variable
+  List<String> _todos = ["Todo 1", "Todo 2", "Todo 3", "Todo 4"];
+
+  // Dialog Boc pop-up
+  // Text input --> add to the _todos
+
+  void _addTodo() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          String newTodo = "";
+
+          return AlertDialog(
+            title: const Text("Enter New Task Below:"),
+            content: TextField(
+              onChanged: (value) {
+                newTodo = value;
+              },
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("Cancel"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              TextButton(
+                child: const Text("Add"),
+                onPressed: () {
+                  setState(() {
+                    _todos.add(newTodo);
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  // ListView.builder --> ListTiles _todos
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("To Do List"),
+        centerTitle: true,
+        backgroundColor: Colors.amber[800],
+      ),
+      body: ListView.builder(
+          itemCount: _todos.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(
+                _todos[index],
+                style: TextStyle(
+                    decoration: _todos[index].startsWith("-")
+                        ? TextDecoration.lineThrough
+                        : null),
+              ),
+              onTap: () => (setState(() {
+                _todos[index].startsWith('-')
+                    ? _todos[index] = _todos[index].substring(1)
+                    : _todos[index] = '- ${_todos[index]}';
+              })),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  setState(() {
+                    _todos.removeAt(index);
+                  });
+                },
+              ),
+            );
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addTodo,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
