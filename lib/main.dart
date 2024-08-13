@@ -359,7 +359,7 @@ class Todos extends StatefulWidget {
 
 class _TodosState extends State<Todos> {
   // initial variable
-  List<String> _todos = ["Todo 1", "Todo 2", "Todo 3", "Todo 4"];
+  final List<String> _todos = ["Todo 1", "Todo 2", "Todo 3", "Todo 4"];
 
   // Dialog Boc pop-up
   // Text input --> add to the _todos
